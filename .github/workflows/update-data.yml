@@ -39,3 +39,21 @@ jobs:
           git add data/tournaments.json
           git commit -m "data: обновление снапшота cslans $(date -u +%Y-%m-%dT%H:%M)"
           git push
+
+      # Деплой на Cloudflare Pages. Работает, когда в секретах репозитория
+      # задан CLOUDFLARE_API_TOKEN (Dashboard -> My Profile -> API Tokens ->
+      # Create Token -> шаблон "Edit Cloudflare Workers" или кастомный с
+      # правом Cloudflare Pages:Edit). Без токена шаг тихо пропускается —
+      # сайт просто живёт на последнем ручном деплое (npm run deploy).
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 066f2d2a7112711a68ccf480afabb01e
+          SITE_URL: https://lan-tablo.pages.dev
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN не задан — пропускаю деплой"
+            exit 0
+          fi
+          npm run build
+          npx wrangler pages deploy dist --project-name lan-tablo --branch main --commit-dirty=true
