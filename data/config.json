@@ -19,6 +19,8 @@
   },
   "guideAnchors": {
     "CLOSED": "закрытые-страны",
+    "CLOSED_ENTRY_OK": "закрытые-страны",
+    "CLOSED_RISK": "закрытые-страны",
     "FOREIGN_VISA": "закрытые-страны",
     "FOREIGN_RISK": "закрытые-страны",
     "HAS_VISA": "шаг-6-дорога",

@@ -26,23 +26,31 @@ export const STATUS = {
     hint: 'Только со срочной записью и готовым приглашением.',
   },
   FOREIGN_RISK: {
-    code: 'FOREIGN_RISK', label: 'НА СВОЙ РИСК', tone: 'warn', rank: 5,
+    code: 'FOREIGN_RISK', label: 'РИСК РАЗВОРОТА', tone: 'warn', rank: 5,
     hint: 'Формально въезд закрыт. Команды добираются внутришенгенскими рейсами без паспортного контроля — при выборочной проверке могут развернуть.',
   },
   LATE: {
     code: 'LATE', label: 'ПОЗДНО', tone: 'dead', rank: 6,
     hint: 'Визовый цикл не влезает. Не подавай: отказ портит досье.',
   },
+  CLOSED_ENTRY_OK: {
+    code: 'CLOSED_ENTRY_OK', label: 'НУЖЕН ШЕНГЕН', tone: 'warn', rank: 7,
+    hint: 'Своя виза не выдаётся, но въезд по действующей визе другой страны легален. Есть шенген — включи тумблер над табло.',
+  },
+  CLOSED_RISK: {
+    code: 'CLOSED_RISK', label: 'РИСК РАЗВОРОТА', tone: 'warn', rank: 8,
+    hint: 'Виза не выдаётся, въезд формально запрещён. Ездят по действующему шенгену другой страны внутришенгенскими рейсами — на проверке могут развернуть.',
+  },
   REG_CLOSED: {
-    code: 'REG_CLOSED', label: 'РЕГИСТРАЦИЯ ЗАКРЫТА', tone: 'na', rank: 7,
+    code: 'REG_CLOSED', label: 'РЕГИСТРАЦИЯ ЗАКРЫТА', tone: 'na', rank: 9,
     hint: 'Приём заявок на турнир завершён.',
   },
   CLOSED: {
-    code: 'CLOSED', label: 'ЗАКРЫТО', tone: 'na', rank: 8,
-    hint: 'Страна не выдаёт визы гражданам РФ.',
+    code: 'CLOSED', label: 'ЗАКРЫТО', tone: 'na', rank: 10,
+    hint: 'Страна не выдаёт визы гражданам РФ, обходного пути нет.',
   },
   UNKNOWN: {
-    code: 'UNKNOWN', label: 'НЕТ ДАННЫХ', tone: 'na', rank: 9,
+    code: 'UNKNOWN', label: 'НЕТ ДАННЫХ', tone: 'na', rank: 11,
     hint: 'Визовый режим этой страны не отслеживается. Проверь сам.',
   },
 };
@@ -87,10 +95,14 @@ export function assess(t, countries, cfg, todayISO, opts = {}) {
     } else {
       status = STATUS.HAS_VISA;
     }
-  } else if (country && country.status === 'closed') {
-    status = STATUS.CLOSED; // терминально: визу под этот турнир не сделать
+  } else if (country && country.status === 'closed' && !country.entryWithForeignVisa) {
+    status = STATUS.CLOSED; // ни визы, ни обходного пути — терминально
   } else if (regClosed) {
-    status = STATUS.REG_CLOSED; // перекрывает всё, кроме ЗАКРЫТО
+    status = STATUS.REG_CLOSED; // без регистрации не важно, как ты въедешь
+  } else if (country && country.status === 'closed') {
+    // визу под этот турнир не сделать, но въезд возможен по визе
+    // другой страны — показываем обходной путь, а не глухое ЗАКРЫТО
+    status = country.entryWithForeignVisa === 'yes' ? STATUS.CLOSED_ENTRY_OK : STATUS.CLOSED_RISK;
   } else if (visaFree) {
     status = STATUS.VISA_FREE;
   } else if (!country) {

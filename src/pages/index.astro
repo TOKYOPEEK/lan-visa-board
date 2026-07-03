@@ -21,7 +21,7 @@ const countryName = (cc) =>
 
 function visaLines(t, a) {
   const lines = [];
-  if (a.status.code === 'CLOSED') {
+  if (a.country?.status === 'closed') {
     lines.push({ text: `${countryName(t.country)} не выдаёт краткосрочные визы гражданам РФ. Подача под этот турнир невозможна.`, tone: 'dead' });
     if (a.country?.entryWithForeignVisa === 'yes') {
       lines.push({ text: 'Запрет касается выдачи виз, а не въезда: с действующей визой другой страны Шенгена ехать можно — отметь «у меня уже есть шенген» над табло.', tone: '' });

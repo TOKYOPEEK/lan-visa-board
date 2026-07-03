@@ -54,7 +54,7 @@ const description = past
     </div>
 
     <article class="prose">
-      {!past && a.country && a.status.code !== 'CLOSED' && (
+      {!past && a.country && a.country.status !== 'closed' && (
         <p>
           Виза: краткосрочная шенгенская C, страна подачи — {countryName(t.country)}.
           {a.country.biometricOnly && ' Только биометрический паспорт.'}
@@ -62,7 +62,7 @@ const description = past
           {a.country.note && ` ${a.country.note}.`}
         </p>
       )}
-      {!past && a.status.code === 'CLOSED' && (
+      {!past && a.country?.status === 'closed' && (
         <p>
           {countryName(t.country)} не выдаёт краткосрочные визы гражданам РФ — подача под этот турнир невозможна.
           {a.country?.entryWithForeignVisa === 'yes' && ' С действующей визой другой страны Шенгена въезд разрешён — запрет касается только выдачи виз.'}

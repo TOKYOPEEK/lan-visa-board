@@ -39,7 +39,11 @@ check('на табло есть строки', rows.length >= 5, `${rows.length}
 check('нет ошибок в консоли', consoleErrors.length === 0, consoleErrors.join(' | ').slice(0, 300));
 
 const sweden = rows.filter((r) => r.id.includes('stake-pulse') || r.id.includes('rog-journey'));
-check('турниры в Швеции — ЗАКРЫТО', sweden.length > 0 && sweden.every((r) => r.chip === 'ЗАКРЫТО'));
+check('турниры в Швеции — НУЖЕН ШЕНГЕН', sweden.length > 0 && sweden.every((r) => r.chip === 'НУЖЕН ШЕНГЕН'),
+  sweden.map((r) => r.chip).join(', '));
+const riskDefault = rows.filter((r) => r.id.includes('urban-riga') || r.id.includes('tipsport') || r.id.includes('elisa'));
+check('Латвия/Чехия/Финляндия — РИСК РАЗВОРОТА', riskDefault.length > 0 && riskDefault.every((r) => r.chip === 'РИСК РАЗВОРОТА'),
+  riskDefault.map((r) => r.chip).join(', '));
 
 const counted = rows.filter((r) => r.days !== '');
 check('счётчики дотикали до целевых значений',
@@ -68,14 +72,14 @@ const seVisa = withVisa.filter((r) => r.id.includes('stake-pulse') || r.id.inclu
 check('с шенгеном Швеция — ВЪЕЗД ОТКРЫТ', seVisa.length > 0 && seVisa.every((r) => r.chip === 'ВЪЕЗД ОТКРЫТ'),
   seVisa.map((r) => r.chip).join(', '));
 const riskVisa = withVisa.filter((r) => r.id.includes('urban-riga') || r.id.includes('tipsport') || r.id.includes('elisa'));
-check('с шенгеном Латвия/Чехия/Финляндия — НА СВОЙ РИСК',
-  riskVisa.length > 0 && riskVisa.every((r) => r.chip === 'НА СВОЙ РИСК'), riskVisa.map((r) => r.chip).join(', '));
+check('с шенгеном Латвия/Чехия/Финляндия — РИСК РАЗВОРОТА',
+  riskVisa.length > 0 && riskVisa.every((r) => r.chip === 'РИСК РАЗВОРОТА'), riskVisa.map((r) => r.chip).join(', '));
 const openVisa = withVisa.filter((r) => r.id.includes('station-strike') || r.id.includes('leon-bet'));
 check('с шенгеном открытые страны — ЕДЕШЬ', openVisa.length > 0 && openVisa.every((r) => r.chip === 'ЕДЕШЬ'),
   openVisa.map((r) => r.chip).join(', '));
 await page.uncheck('#f-visa');
 const backDefault = await page.$eval('#board tbody[data-id*="stake-pulse"] [data-chip]', (el) => el.textContent.trim());
-check('выключил тумблер — Швеция снова ЗАКРЫТО', backDefault === 'ЗАКРЫТО', backDefault);
+check('выключил тумблер — Швеция снова НУЖЕН ШЕНГЕН', backDefault === 'НУЖЕН ШЕНГЕН', backDefault);
 
 // фильтр «только открытые страны»
 await page.check('#f-open');
