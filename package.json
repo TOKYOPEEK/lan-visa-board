@@ -1,0 +1,24 @@
+{
+  "name": "lan-visa-board",
+  "version": "1.0.0",
+  "description": "Успеваю ли я сделать визу на этот LAN? Табло EU LAN-турниров по CS2 для игроков с паспортом РФ.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "fetch-data": "node scripts/fetch-tournaments.mjs",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.4.0",
+    "@fontsource-variable/golos-text": "^5.2.5",
+    "@fontsource-variable/unbounded": "^5.2.5",
+    "@fontsource/ibm-plex-mono": "^5.2.5",
+    "astro": "^5.10.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.61.1"
+  }
+}

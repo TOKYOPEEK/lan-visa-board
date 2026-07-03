@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import snapshot from '../../data/tournaments.json';
+import countries from '../../data/countries.json';
+import { fmtTimestamp, fmtDateFull } from '../lib/format.js';
+
+const countriesVerified = Object.values(countries).map((c) => c.lastVerified).sort().at(-1);
+---
+<Base title="О проекте — ЛАН-ТАБЛО"
+  description="Что такое ЛАН-ТАБЛО: источники данных, как считается визовый статус, дисклеймер.">
+  <h1>О проекте</h1>
+
+  <article class="prose">
+    <p>
+      ЛАН-ТАБЛО отвечает на один вопрос: <strong>успеваешь ли ты сделать визу на конкретный
+      EU LAN по CS2</strong>, если у тебя паспорт РФ. Табло берёт список турниров, накладывает
+      на него визовый статус страны и считает дни. Это утилита, а не медиа: проверяй её как таблицу
+      результатов.
+    </p>
+
+    <h2>Как считается статус</h2>
+    <ul>
+      <li><strong>ЗАКРЫТО</strong> — страна не выдаёт визы гражданам РФ. Сроки не важны.</li>
+      <li><strong>РЕГИСТРАЦИЯ ЗАКРЫТА</strong> — приём заявок на турнир завершён.</li>
+      <li><strong>РЕАЛЬНО</strong> — до старта 90+ дней, комфортный запас.</li>
+      <li><strong>ВПРИТЫК</strong> — 45–89 дней: только срочная запись и готовое приглашение.</li>
+      <li><strong>ПОЗДНО</strong> — меньше 45 дней: визовый цикл не влезает, не подавай.</li>
+      <li><strong>БЕЗ ВИЗЫ</strong> — безвизовая страна, нужен только загранпаспорт.</li>
+    </ul>
+    <p>Пороги и обоснование — в <a href="/guide/#шаг-5-сроки-рассмотрения">гайде</a>.</p>
+
+    <h2>Источники</h2>
+    <ul>
+      <li>
+        <strong>Турниры</strong>: <a href="https://cslans.com" rel="noopener">cslans.com</a> —
+        каталог CS2 LAN-турниров, который вручную ведёт Roope Leppänen
+        (<a href="https://x.com/CS2LANS" rel="noopener">@CS2LANS</a>). Данные забираются раз в 8 часов,
+        нормализуются и коммитятся в репозиторий; каждая строка табло ссылается на свою страницу
+        на cslans.com. Если источник недоступен, табло показывает последний удачный снапшот
+        с указанием возраста — и никогда не подменяет источник молча.
+        <br />Обновлено: <span class="mono">{fmtTimestamp(snapshot.fetchedAt)}</span>
+      </li>
+      <li>
+        <strong>Статусы стран</strong>: ручная курация в
+        <a href="https://github.com/TOKYOPEEK/lan-visa-board/blob/main/data/countries.json" rel="noopener">data/countries.json</a>,
+        у каждой записи своя дата проверки.
+        <br />Последняя проверка: <span class="mono">{fmtDateFull(countriesVerified)}</span>
+      </li>
+    </ul>
+
+    <h2>Дисклеймер</h2>
+    <blockquote>
+      <p>
+        Это не юридическая консультация. Визовые правила меняются без предупреждения.
+        Перед любой подачей проверяй требования на официальных сайтах консульств
+        и визовых центров. Ответственность за решение о подаче — на тебе.
+      </p>
+    </blockquote>
+
+    <h2>Контакт</h2>
+    <p>
+      Ошибка в данных или статус страны устарел —
+      <a href="https://github.com/TOKYOPEEK/lan-visa-board/issues" rel="noopener">открой issue</a>.
+    </p>
+  </article>
+</Base>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lan-tablo.pages.dev/sitemap-index.xml

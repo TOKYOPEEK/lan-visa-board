@@ -1,0 +1,313 @@
+---
+import Base from '../layouts/Base.astro';
+import snapshot from '../../data/tournaments.json';
+import countries from '../../data/countries.json';
+import cfg from '../../data/config.json';
+import { assess, explainMath, prizeEur, fmtDayMonth, plural } from '../lib/feasibility.js';
+import { fmtRange, fmtPrize, fmtTimestamp } from '../lib/format.js';
+
+const todayISO = new Date().toISOString().slice(0, 10);
+const upcoming = snapshot.tournaments
+  .filter((t) => (t.endDate ?? t.startDate) >= todayISO)
+  .sort((a, b) => String(a.startDate).localeCompare(String(b.startDate)));
+
+const rows = upcoming.map((t) => {
+  const a = assess(t, countries, cfg, todayISO);
+  return { t, a, eur: prizeEur(t, cfg) };
+});
+
+const countryName = (cc) =>
+  countries[cc]?.nameRu ?? cfg.visaFree[cc] ?? cfg.countryNamesRu[cc] ?? cc ?? '—';
+
+function visaLines(t, a) {
+  const lines = [];
+  if (a.status.code === 'CLOSED') {
+    lines.push({ text: `${countryName(t.country)} не выдаёт краткосрочные визы гражданам РФ. Подача под этот турнир невозможна.`, tone: 'dead' });
+  } else if (a.visaFree) {
+    lines.push({ text: `${countryName(t.country)} — безвизовый въезд для граждан РФ. Нужен только загранпаспорт.`, tone: '' });
+  } else if (!a.country) {
+    lines.push({ text: 'Визовый режим этой страны табло не отслеживает. Проверь требования сам.', tone: 'warn' });
+  } else {
+    lines.push({ text: `Краткосрочная шенгенская виза C, страна подачи — ${countryName(t.country)}. Запись в визовом центре: виза C, цель «спорт / мероприятие» или «туризм».`, tone: '' });
+  }
+  if (a.hard) lines.push({ text: 'Сложная страна: высокий % отказов, подавайся только с сильным досье.', tone: 'warn' });
+  if (a.country?.biometricOnly) lines.push({ text: 'Принимаются только биометрические загранпаспорта.', tone: 'warn' });
+  if (a.country?.euInsuranceOnly) lines.push({ text: 'Страховка — только от страховщика из ЕС, российские полисы не принимаются.', tone: 'warn' });
+  if (a.transitBan) lines.push({ text: 'Транзитный бан: не строй маршрут через эту страну — внешняя граница закрыта для граждан РФ.', tone: 'warn' });
+  if (a.country?.note) lines.push({ text: a.country.note, tone: '' });
+  return lines;
+}
+
+const guideAnchor = (a) => `/guide/#${cfg.guideAnchors[a.status.code]}`;
+
+function regCellText(t, a) {
+  if (a.regClosed) return { text: a.regClosingDay ? `закрыта ${fmtDayMonth(a.regClosingDay)}` : 'закрыта', closed: true };
+  if (a.regClosingDay) return { text: `до ${fmtDayMonth(a.regClosingDay)}`, closed: false };
+  return { text: '—', closed: false };
+}
+
+const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сделать визу на EU LAN';
+---
+<Base title={pageTitle}>
+  <h1>Успеваешь ли ты на LAN</h1>
+  <p class="page-sub">
+    Табло EU LAN-турниров по CS2 с визовыми статусами для граждан РФ.
+    Считает от сегодняшней даты: минимум на визу — {cfg.visaMinDays} дней, комфортный запас — {cfg.visaComfortDays}.
+    Как это устроено — в <a href="/guide/">гайде</a>.
+  </p>
+
+  <div class="board-meta">
+    <span id="board-count" class="mono">{rows.length} {plural(rows.length, 'турнир', 'турнира', 'турниров')}</span>
+    <span>данные от <span class="mono">{fmtTimestamp(snapshot.fetchedAt)}</span></span>
+    <span>источник: <a href="https://cslans.com" rel="noopener">cslans.com</a></span>
+    <span id="stale-notice" class="stale" hidden data-fetched={snapshot.fetchedAt} data-stale-hours={cfg.staleAfterHours}></span>
+  </div>
+
+  <div class="filters" id="filters">
+    <label><input type="checkbox" id="f-open" /> только открытые страны</label>
+    <label><input type="checkbox" id="f-time" /> успеваю по срокам</label>
+    <label>призовой
+      <select id="f-prize">
+        <option value="0">любой</option>
+        <option value="5000">от €5 000</option>
+        <option value="15000">от €15 000</option>
+        <option value="50000">от €50 000</option>
+      </select>
+    </label>
+    <span class="spacer"></span>
+    <label>сортировка
+      <select id="f-sort">
+        <option value="date">по дате</option>
+        <option value="prize">по призовому</option>
+        <option value="feas">по реальности</option>
+      </select>
+    </label>
+  </div>
+
+  <table class="board" id="board">
+    <thead>
+      <tr>
+        <th>T−</th>
+        <th>Статус</th>
+        <th>Турнир</th>
+        <th>Даты</th>
+        <th>Призовой</th>
+        <th>Слоты</th>
+        <th>Регистрация</th>
+      </tr>
+    </thead>
+    {rows.map(({ t, a, eur }, i) => {
+      const reg = regCellText(t, a);
+      return (
+        <tbody data-id={t.id} data-index={i}>
+          <tr class="row">
+            <td class="cell-t">
+              <span class={`t-minus ${a.status.tone}`} data-counter data-days={a.daysUntil ?? ''}>
+                {a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—'}
+              </span>
+            </td>
+            <td class="cell-status">
+              <span class={`chip ${a.status.tone}`} data-chip>{a.status.label}</span>
+            </td>
+            <td class="cell-name">
+              <button type="button" class="btn-name" aria-expanded="false" aria-controls={`d-${t.id}`}>{t.name}</button>
+              <span class="loc">
+                {t.country && (
+                  <img class="flag" src={`https://flagcdn.com/16x12/${t.country.toLowerCase()}.webp`}
+                    srcset={`https://flagcdn.com/32x24/${t.country.toLowerCase()}.webp 2x`}
+                    alt={t.country} width="16" height="12" loading="lazy" />
+                )}
+                {t.city ?? t.location ?? '—'}, {countryName(t.country)}
+                {(a.transitBan || a.hard) && (
+                  <span class="warn-flags">{a.transitBan ? 'транзитный бан' : ''}{a.transitBan && a.hard ? ' · ' : ''}{a.hard ? 'сложная страна' : ''}</span>
+                )}
+              </span>
+            </td>
+            <td class="cell-dates">{fmtRange(t.startDate, t.endDate)}</td>
+            <td class="cell-prize">{fmtPrize(t.prizePool, t.prizeRaw)}</td>
+            <td class="cell-slots">{t.teamSlots ?? '—'}</td>
+            <td class="cell-reg" data-reg>
+              {reg.closed ? <span class="reg-closed">{reg.text}</span> : reg.text}
+            </td>
+          </tr>
+          <tr class="row-detail" id={`d-${t.id}`} hidden>
+            <td colspan="7">
+              <div class="detail-grid">
+                <div>
+                  <h3>Виза</h3>
+                  <ul>
+                    {visaLines(t, a).map((l) => (
+                      <li class={l.tone === 'warn' ? 'detail-warn' : l.tone === 'dead' ? 'detail-dead' : ''}>{l.text}</li>
+                    ))}
+                  </ul>
+                  <h3>Математика</h3>
+                  <p class="math" data-math>{explainMath(a, cfg) ?? 'даты турнира не распознаны'}</p>
+                  {t.format && (<><h3>Формат</h3><p>{t.format.split('|').join(' · ')}</p></>)}
+                  {t.prizeSpread && (<><h3>Распределение призовых</h3><p>{t.prizeSpread.split('|').join(' · ')}</p></>)}
+                  {t.registrationFee && (<p>Взнос: <span class="mono">{t.registrationFee}</span></p>)}
+                  {t.notes && t.notes.map((n) => <p>{n}</p>)}
+                </div>
+                <div>
+                  <h3>Ссылки</h3>
+                  <div class="detail-links">
+                    <a href={guideAnchor(a)}>→ что делать: раздел гайда</a>
+                    <a href={t.sourceUrl} rel="noopener">→ турнир на cslans.com</a>
+                    {t.tournamentUrl && <a href={t.tournamentUrl} rel="noopener">→ официальный сайт</a>}
+                    {t.signUpUrl && !a.regClosed && <a href={t.signUpUrl} rel="noopener">→ регистрация команды</a>}
+                    {t.streamUrl && <a href={t.streamUrl} rel="noopener">→ стрим</a>}
+                    <a href={`/t/${t.id}/`}>→ постоянная ссылка</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      );
+    })}
+  </table>
+
+  <div class="empty-state" id="empty-state">
+    Турниров в открытых странах в ближайшие {cfg.visaComfortDays} дней нет.
+    Включи фильтр «все страны» или проверь позже.
+  </div>
+
+  <p class="board-attribution">
+    данные о турнирах: <a href="https://cslans.com" rel="noopener">cslans.com</a> (мейнтейнер — Roope Leppänen).
+    Каждая строка ссылается на источник. Статусы стран — <a href="/countries/">ручная курация</a>,
+    не юридическая консультация.
+  </p>
+</Base>
+
+<script>
+  import snapshot from '../../data/tournaments.json';
+  import countries from '../../data/countries.json';
+  import cfg from '../../data/config.json';
+  import { assess, explainMath, prizeEur, fmtDayMonth } from '../lib/feasibility.js';
+
+  // локальная дата пользователя, а не время сборки
+  const now = new Date();
+  const todayISO = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  const byId = new Map(snapshot.tournaments.map((t) => [t.id, t]));
+  const bodies = Array.from(document.querySelectorAll('#board tbody[data-id]'));
+  const state = new Map(); // id -> { a, eur, t }
+
+  // ── пересчёт статусов от сегодняшней даты ──────────
+  for (const tb of bodies) {
+    const t = byId.get(tb.dataset.id);
+    if (!t) continue;
+    if ((t.endDate ?? t.startDate) < todayISO) { tb.remove(); continue; } // турнир уже прошёл
+    const a = assess(t, countries, cfg, todayISO);
+    state.set(tb.dataset.id, { a, eur: prizeEur(t, cfg), t });
+
+    const counter = tb.querySelector('[data-counter]');
+    counter.className = `t-minus ${a.status.tone}`;
+    counter.dataset.days = a.daysUntil ?? '';
+    counter.textContent = a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—';
+
+    const chip = tb.querySelector('[data-chip]');
+    chip.className = `chip ${a.status.tone}`;
+    chip.textContent = a.status.label;
+    chip.title = a.status.hint;
+
+    const reg = tb.querySelector('[data-reg]');
+    if (a.regClosed) reg.innerHTML = `<span class="reg-closed">закрыта${a.regClosingDay ? ' ' + fmtDayMonth(a.regClosingDay) : ''}</span>`;
+    else reg.textContent = a.regClosingDay ? `до ${fmtDayMonth(a.regClosingDay)}` : '—';
+
+    const math = tb.querySelector('[data-math]');
+    if (math) math.textContent = explainMath(a, cfg) ?? 'даты турнира не распознаны';
+  }
+
+  // ── возраст данных ─────────────────────────────────
+  const stale = document.getElementById('stale-notice');
+  const ageH = (Date.now() - Date.parse(stale.dataset.fetched)) / 3.6e6;
+  if (ageH > Number(stale.dataset.staleHours)) {
+    const d = stale.dataset.fetched;
+    stale.textContent = `данные от ${d.slice(8, 10)}.${d.slice(5, 7)}, источник временно недоступен`;
+    stale.hidden = false;
+  }
+
+  // ── раскрытие строк ────────────────────────────────
+  for (const tb of bodies) {
+    const row = tb.querySelector('tr.row');
+    const detail = tb.querySelector('tr.row-detail');
+    const btn = tb.querySelector('.btn-name');
+    if (!row || !detail || !btn) continue;
+    const toggle = () => {
+      detail.hidden = !detail.hidden;
+      btn.setAttribute('aria-expanded', String(!detail.hidden));
+    };
+    btn.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a, button')) return;
+      toggle();
+    });
+  }
+
+  // ── фильтры и сортировка ───────────────────────────
+  const board = document.getElementById('board');
+  const empty = document.getElementById('empty-state');
+  const count = document.getElementById('board-count');
+  const fOpen = document.getElementById('f-open');
+  const fTime = document.getElementById('f-time');
+  const fPrize = document.getElementById('f-prize');
+  const fSort = document.getElementById('f-sort');
+
+  const plural = (n, one, few, many) => {
+    const a = Math.abs(n) % 100, d = a % 10;
+    if (a > 10 && a < 20) return many;
+    if (d === 1) return one;
+    if (d >= 2 && d <= 4) return few;
+    return many;
+  };
+
+  function apply() {
+    const live = bodies.filter((tb) => state.has(tb.dataset.id));
+    let visible = 0;
+    for (const tb of live) {
+      const { a, eur, t } = state.get(tb.dataset.id);
+      let show = true;
+      if (fOpen.checked) show = a.visaFree || a.country?.status === 'open';
+      if (show && fTime.checked) show = ['OK', 'TIGHT', 'VISA_FREE'].includes(a.status.code) && !a.regClosed;
+      if (show && Number(fPrize.value) > 0) show = eur >= Number(fPrize.value);
+      tb.style.display = show ? '' : 'none';
+      if (show) visible++;
+    }
+    const key = fSort.value;
+    const sorted = [...live].sort((x, y) => {
+      const sx = state.get(x.dataset.id), sy = state.get(y.dataset.id);
+      if (key === 'prize') return sy.eur - sx.eur;
+      if (key === 'feas') {
+        const r = sx.a.status.rank - sy.a.status.rank;
+        if (r !== 0) return r;
+      }
+      return String(sx.t.startDate).localeCompare(String(sy.t.startDate));
+    });
+    for (const tb of sorted) board.appendChild(tb);
+    empty.classList.toggle('visible', visible === 0);
+    count.textContent = `${visible} ${plural(visible, 'турнир', 'турнира', 'турниров')}`;
+  }
+  for (const el of [fOpen, fTime, fPrize, fSort]) el.addEventListener('change', apply);
+  apply();
+
+  // ── один оркестрированный момент: счётчики тикают вверх ──
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const counters = Array.from(document.querySelectorAll('[data-counter]'))
+      .filter((el) => el.dataset.days !== '' && Number(el.dataset.days) > 0);
+    counters.forEach((el, i) => {
+      const target = Number(el.dataset.days);
+      const t0 = performance.now() + i * 30; // стаггер по строкам
+      const dur = 400;
+      const tick = (ts) => {
+        const p = Math.min(1, Math.max(0, (ts - t0) / dur));
+        el.textContent = `T−${Math.round(target * (1 - Math.pow(1 - p, 3)))}`;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+</script>

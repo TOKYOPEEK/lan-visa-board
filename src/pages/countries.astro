@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import countries from '../../data/countries.json';
+import cfg from '../../data/config.json';
+import { fmtDateFull } from '../lib/format.js';
+
+const entries = Object.entries(countries);
+const groups = [
+  ['open', 'Открытые — визы выдаются', 'ok', 'ОТКРЫТО'],
+  ['hard', 'Сложные — высокий % отказов', 'warn', 'СЛОЖНО'],
+  ['closed', 'Закрытые — визы не выдаются', 'dead', 'ЗАКРЫТО'],
+];
+const lastVerified = entries.map(([, c]) => c.lastVerified).sort().at(-1);
+---
+<Base title="Статусы стран Шенгена для граждан РФ — ЛАН-ТАБЛО"
+  description="Какие страны Шенгена выдают визы гражданам РФ: открытые, сложные, закрытые. Транзитные баны, требования к паспорту и страховке.">
+  <h1>Страны</h1>
+  <p class="page-sub">
+    Визовый статус стран Шенгена для граждан РФ. Это ручная курация — источник истины для
+    <a href="/">табло</a>. Списки соответствуют <a href="/guide/#шаг-0-выбери-страну">Шагу 0 гайда</a>.
+  </p>
+  <p class="verified-stamp">последняя проверка: {fmtDateFull(lastVerified)}</p>
+
+  {groups.map(([status, title, tone, label]) => (
+    <section class="country-group">
+      <h2>{title}</h2>
+      {entries.filter(([, c]) => c.status === status).map(([iso, c]) => (
+        <div class="country-row">
+          <span class="c-name">
+            <img class="flag" src={`https://flagcdn.com/16x12/${iso.toLowerCase()}.webp`}
+              srcset={`https://flagcdn.com/32x24/${iso.toLowerCase()}.webp 2x`}
+              alt="" width="16" height="12" loading="lazy" />
+            {c.nameRu}<span class="iso">{iso}</span>
+          </span>
+          <span class={`chip ${tone}`}>{label}</span>
+          <span class="c-note">
+            {c.note}
+            {c.biometricOnly && <span class="extra"> · только биометрический паспорт</span>}
+            {c.euInsuranceOnly && <span class="extra"> · страховка только ЕС</span>}
+            {c.transitBan && <span class="extra"> · транзитный бан</span>}
+          </span>
+        </div>
+      ))}
+    </section>
+  ))}
+
+  <section class="country-group">
+    <h2>Без визы</h2>
+    <p class="page-sub" style="margin-bottom: 8px;">
+      Турниры в этих странах не требуют визы для граждан РФ — достаточно загранпаспорта:
+      {Object.values(cfg.visaFree).join(', ')}.
+    </p>
+  </section>
+
+  <p class="board-attribution">
+    Лихтенштейн, Люксембург и Словакия не отслеживаются: по ним нет проверенных данных, а LAN-турниры
+    там редкость. Правила меняются без предупреждения — перед подачей проверяй на официальном сайте
+    консульства. Даты проверки каждой записи — в
+    <a href="https://github.com/TOKYOPEEK/lan-visa-board/blob/main/data/countries.json" rel="noopener">data/countries.json</a>.
+  </p>
+</Base>

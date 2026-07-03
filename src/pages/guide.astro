@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { Content, getHeadings, frontmatter } from '../content/eu-lan-visa-guide.md';
+import { fmtDateFull } from '../lib/format.js';
+
+const headings = getHeadings().filter((h) => h.depth === 2 || h.depth === 3);
+---
+<Base title="Гайд: виза на EU LAN для гражданина РФ — ЛАН-ТАБЛО"
+  description="Пошаговый гайд: как гражданину РФ сделать шенгенскую визу на LAN-турнир по CS2. Открытые и закрытые страны, документы, сроки, маршруты.">
+  <h1>{frontmatter.title}</h1>
+  <p class="verified-stamp">последняя проверка фактов: {fmtDateFull(frontmatter.lastVerified)}</p>
+
+  <div class="content-layout">
+    <nav class="toc" aria-label="Содержание">
+      <ol>
+        {headings.map((h) => (
+          <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
+        ))}
+      </ol>
+    </nav>
+    <article class="prose">
+      <Content />
+    </article>
+  </div>
+</Base>

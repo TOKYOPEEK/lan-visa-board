@@ -1,0 +1,65 @@
+---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/golos-text';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '../styles/global.css';
+
+const {
+  title,
+  description = 'Успеваешь ли ты сделать визу на EU LAN по CS2. Табло турниров с визовыми статусами для граждан РФ.',
+  ogTitle = title,
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site);
+const nav = [
+  ['/', 'Табло'],
+  ['/guide/', 'Гайд'],
+  ['/countries/', 'Страны'],
+  ['/about/', 'О проекте'],
+];
+const isCurrent = (href) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="ЛАН-ТАБЛО" />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href="/">ЛАН-ТАБЛО<span class="tld">.визы</span></a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          {nav.map(([href, label]) => (
+            <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="wrap">
+        <slot />
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>данные о турнирах: <a href="https://cslans.com" rel="noopener">cslans.com</a></span>
+        <span>не юридическая консультация — проверяй на сайтах консульств</span>
+        <a href="/about/">о проекте и источниках</a>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro';
+import snapshot from '../../../data/tournaments.json';
+import countries from '../../../data/countries.json';
+import cfg from '../../../data/config.json';
+import { assess, explainMath, fmtDayMonth } from '../../lib/feasibility.js';
+import { fmtRange, fmtPrize } from '../../lib/format.js';
+
+export function getStaticPaths() {
+  return snapshot.tournaments.map((t) => ({ params: { id: t.id }, props: { t } }));
+}
+
+const { t } = Astro.props;
+const todayISO = new Date().toISOString().slice(0, 10);
+const past = (t.endDate ?? t.startDate) < todayISO;
+const a = assess(t, countries, cfg, todayISO);
+const countryName = (cc) =>
+  countries[cc]?.nameRu ?? cfg.visaFree[cc] ?? cfg.countryNamesRu[cc] ?? cc ?? '—';
+
+const ogTitle = `Успеваешь ли на ${t.name}?`;
+const description = past
+  ? `${t.name} — турнир прошёл (${fmtRange(t.startDate, t.endDate)}, ${t.city ?? ''}).`
+  : `${fmtRange(t.startDate, t.endDate)}, ${t.city ?? '—'}, ${countryName(t.country)}. Статус для граждан РФ: ${a.status.label}. ${a.status.hint}`;
+---
+<Base title={`${ogTitle} — ЛАН-ТАБЛО`} ogTitle={ogTitle} description={description}>
+  <article
+    data-start={t.startDate} data-end={t.endDate ?? ''} data-country={t.country ?? ''}
+    data-reg-closing={t.registrationClosing ?? ''} data-signup-closed={t.signupClosed ? '1' : ''}>
+    <h1>{t.name}</h1>
+    <p class="page-sub">
+      {fmtRange(t.startDate, t.endDate)} · {t.city ?? t.location ?? '—'}, {countryName(t.country)}
+      {t.teamSlots && <> · {t.teamSlots} слотов</>}
+      {t.prizePool && <> · {fmtPrize(t.prizePool, t.prizeRaw)}</>}
+    </p>
+
+    <div class="t-hero">
+      {past ? (
+        <>
+          <span class="chip na">ТУРНИР ПРОШЁЛ</span>
+          <div class="t-big na">—</div>
+        </>
+      ) : (
+        <>
+          <span class={`chip ${a.status.tone}`} data-chip>{a.status.label}</span>
+          <div class={`t-big ${a.status.tone}`} data-big-counter>
+            {a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—'}
+          </div>
+          <p class="mono" style="color: var(--ink-dim); font-size: 0.85rem;" data-math>
+            {explainMath(a, cfg) ?? ''}
+          </p>
+          <p style="color: var(--ink-dim); max-width: 60ch;">{a.status.hint}</p>
+        </>
+      )}
+    </div>
+
+    <article class="prose">
+      {!past && a.country && a.status.code !== 'CLOSED' && (
+        <p>
+          Виза: краткосрочная шенгенская C, страна подачи — {countryName(t.country)}.
+          {a.country.biometricOnly && ' Только биометрический паспорт.'}
+          {a.country.euInsuranceOnly && ' Страховка — только от страховщика из ЕС.'}
+          {a.country.note && ` ${a.country.note}.`}
+        </p>
+      )}
+      {!past && a.status.code === 'CLOSED' && (
+        <p>{countryName(t.country)} не выдаёт краткосрочные визы гражданам РФ — подача под этот турнир невозможна.</p>
+      )}
+      {!past && a.transitBan && (
+        <p class="detail-warn">Транзитный бан: внешняя граница этой страны закрыта для граждан РФ даже с визой другой страны Шенгена.</p>
+      )}
+      {!past && a.regClosingDay && !a.regClosed && (
+        <p>Регистрация команд — до <span class="mono">{fmtDayMonth(a.regClosingDay)}</span>.</p>
+      )}
+      <p>
+        <a href={`/guide/#${cfg.guideAnchors[a.status.code]}`}>→ что делать: раздел гайда</a><br />
+        <a href={t.sourceUrl} rel="noopener">→ турнир на cslans.com</a><br />
+        {t.tournamentUrl && (<><a href={t.tournamentUrl} rel="noopener">→ официальный сайт</a><br /></>)}
+        <a href="/">→ все турниры на табло</a>
+      </p>
+    </article>
+  </article>
+</Base>
+
+<script>
+  import countries from '../../../data/countries.json';
+  import cfg from '../../../data/config.json';
+  import { assess, explainMath } from '../../lib/feasibility.js';
+
+  const el = document.querySelector('article[data-start]');
+  const now = new Date();
+  const todayISO = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+  ].join('-');
+  const t = {
+    startDate: el.dataset.start || null,
+    endDate: el.dataset.end || null,
+    country: el.dataset.country || null,
+    registrationClosing: el.dataset.regClosing || null,
+    signupClosed: el.dataset.signupClosed === '1' ? true : null,
+  };
+  if ((t.endDate ?? t.startDate) >= todayISO) {
+    const a = assess(t, countries, cfg, todayISO);
+    const big = el.querySelector('[data-big-counter]');
+    const chip = el.querySelector('[data-chip]');
+    const math = el.querySelector('[data-math]');
+    if (big) {
+      big.className = `t-big ${a.status.tone}`;
+      big.textContent = a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—';
+    }
+    if (chip) { chip.className = `chip ${a.status.tone}`; chip.textContent = a.status.label; }
+    if (math) math.textContent = explainMath(a, cfg) ?? '';
+  }
+</script>
