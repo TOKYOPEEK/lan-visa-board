@@ -23,6 +23,12 @@ function visaLines(t, a) {
   const lines = [];
   if (a.status.code === 'CLOSED') {
     lines.push({ text: `${countryName(t.country)} не выдаёт краткосрочные визы гражданам РФ. Подача под этот турнир невозможна.`, tone: 'dead' });
+    if (a.country?.entryWithForeignVisa === 'yes') {
+      lines.push({ text: 'Запрет касается выдачи виз, а не въезда: с действующей визой другой страны Шенгена ехать можно — отметь «у меня уже есть шенген» над табло.', tone: '' });
+    }
+    if (a.country?.entryWithForeignVisa === 'risky') {
+      lines.push({ text: 'Формально закрыт и въезд. На практике команды добираются внутришенгенскими рейсами (паспортного контроля нет) — серая зона, при выборочной проверке могут развернуть.', tone: 'warn' });
+    }
   } else if (a.visaFree) {
     lines.push({ text: `${countryName(t.country)} — безвизовый въезд для граждан РФ. Нужен только загранпаспорт.`, tone: '' });
   } else if (!a.country) {
@@ -66,6 +72,8 @@ const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сдела
   <div class="filters" id="filters">
     <label><input type="checkbox" id="f-open" /> только открытые страны</label>
     <label><input type="checkbox" id="f-time" /> успеваю по срокам</label>
+    <label title="действующая многократная виза любой открытой страны Шенгена: сроки подачи не считаются, закрытые страны оцениваются по правилам въезда">
+      <input type="checkbox" id="f-visa" /> у меня уже есть шенген</label>
     <label>призовой
       <select id="f-prize">
         <option value="0">любой</option>
@@ -196,31 +204,35 @@ const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сдела
   const bodies = Array.from(document.querySelectorAll('#board tbody[data-id]'));
   const state = new Map(); // id -> { a, eur, t }
 
-  // ── пересчёт статусов от сегодняшней даты ──────────
-  for (const tb of bodies) {
-    const t = byId.get(tb.dataset.id);
-    if (!t) continue;
-    if ((t.endDate ?? t.startDate) < todayISO) { tb.remove(); continue; } // турнир уже прошёл
-    const a = assess(t, countries, cfg, todayISO);
-    state.set(tb.dataset.id, { a, eur: prizeEur(t, cfg), t });
+  // ── пересчёт статусов от сегодняшней даты (и тумблера «есть шенген») ──
+  function recompute(hasVisa) {
+    for (const tb of bodies) {
+      if (!tb.isConnected) continue;
+      const t = byId.get(tb.dataset.id);
+      if (!t) continue;
+      if ((t.endDate ?? t.startDate) < todayISO) { tb.remove(); continue; } // турнир уже прошёл
+      const a = assess(t, countries, cfg, todayISO, { hasVisa });
+      state.set(tb.dataset.id, { a, eur: prizeEur(t, cfg), t });
 
-    const counter = tb.querySelector('[data-counter]');
-    counter.className = `t-minus ${a.status.tone}`;
-    counter.dataset.days = a.daysUntil ?? '';
-    counter.textContent = a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—';
+      const counter = tb.querySelector('[data-counter]');
+      counter.className = `t-minus ${a.status.tone}`;
+      counter.dataset.days = a.daysUntil ?? '';
+      counter.textContent = a.ongoing ? 'идёт' : a.daysUntil !== null ? `T−${a.daysUntil}` : '—';
 
-    const chip = tb.querySelector('[data-chip]');
-    chip.className = `chip ${a.status.tone}`;
-    chip.textContent = a.status.label;
-    chip.title = a.status.hint;
+      const chip = tb.querySelector('[data-chip]');
+      chip.className = `chip ${a.status.tone}`;
+      chip.textContent = a.status.label;
+      chip.title = a.status.hint;
 
-    const reg = tb.querySelector('[data-reg]');
-    if (a.regClosed) reg.innerHTML = `<span class="reg-closed">закрыта${a.regClosingDay ? ' ' + fmtDayMonth(a.regClosingDay) : ''}</span>`;
-    else reg.textContent = a.regClosingDay ? `до ${fmtDayMonth(a.regClosingDay)}` : '—';
+      const reg = tb.querySelector('[data-reg]');
+      if (a.regClosed) reg.innerHTML = `<span class="reg-closed">закрыта${a.regClosingDay ? ' ' + fmtDayMonth(a.regClosingDay) : ''}</span>`;
+      else reg.textContent = a.regClosingDay ? `до ${fmtDayMonth(a.regClosingDay)}` : '—';
 
-    const math = tb.querySelector('[data-math]');
-    if (math) math.textContent = explainMath(a, cfg) ?? 'даты турнира не распознаны';
+      const math = tb.querySelector('[data-math]');
+      if (math) math.textContent = explainMath(a, cfg) ?? 'даты турнира не распознаны';
+    }
   }
+  recompute(localStorage.getItem('hasVisa') === '1');
 
   // ── возраст данных ─────────────────────────────────
   const stale = document.getElementById('stale-notice');
@@ -254,8 +266,10 @@ const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сдела
   const count = document.getElementById('board-count');
   const fOpen = document.getElementById('f-open');
   const fTime = document.getElementById('f-time');
+  const fVisa = document.getElementById('f-visa');
   const fPrize = document.getElementById('f-prize');
   const fSort = document.getElementById('f-sort');
+  fVisa.checked = localStorage.getItem('hasVisa') === '1';
 
   const plural = (n, one, few, many) => {
     const a = Math.abs(n) % 100, d = a % 10;
@@ -272,7 +286,9 @@ const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сдела
       const { a, eur, t } = state.get(tb.dataset.id);
       let show = true;
       if (fOpen.checked) show = a.visaFree || a.country?.status === 'open';
-      if (show && fTime.checked) show = ['OK', 'TIGHT', 'VISA_FREE'].includes(a.status.code) && !a.regClosed;
+      if (show && fTime.checked) {
+        show = ['OK', 'TIGHT', 'VISA_FREE', 'HAS_VISA', 'FOREIGN_VISA', 'FOREIGN_RISK'].includes(a.status.code) && !a.regClosed;
+      }
       if (show && Number(fPrize.value) > 0) show = eur >= Number(fPrize.value);
       tb.style.display = show ? '' : 'none';
       if (show) visible++;
@@ -292,6 +308,11 @@ const pageTitle = 'ЛАН-ТАБЛО — успеваешь ли ты сдела
     count.textContent = `${visible} ${plural(visible, 'турнир', 'турнира', 'турниров')}`;
   }
   for (const el of [fOpen, fTime, fPrize, fSort]) el.addEventListener('change', apply);
+  fVisa.addEventListener('change', () => {
+    localStorage.setItem('hasVisa', fVisa.checked ? '1' : '0');
+    recompute(fVisa.checked);
+    apply();
+  });
   apply();
 
   // ── один оркестрированный момент: счётчики тикают вверх ──

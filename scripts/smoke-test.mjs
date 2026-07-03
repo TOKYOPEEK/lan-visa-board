@@ -59,6 +59,24 @@ check('фильтр «успеваю» скрывает ЗАКРЫТО/ПОЗД�
   feasible.join(', '));
 await page.uncheck('#f-time');
 
+// тумблер «у меня уже есть шенген»
+await page.check('#f-visa');
+const withVisa = await page.$$eval('#board tbody[data-id]', (els) =>
+  els.map((el) => ({ id: el.dataset.id, chip: el.querySelector('[data-chip]').textContent.trim() }))
+);
+const seVisa = withVisa.filter((r) => r.id.includes('stake-pulse') || r.id.includes('rog-journey'));
+check('с шенгеном Швеция — ВЪЕЗД ОТКРЫТ', seVisa.length > 0 && seVisa.every((r) => r.chip === 'ВЪЕЗД ОТКРЫТ'),
+  seVisa.map((r) => r.chip).join(', '));
+const riskVisa = withVisa.filter((r) => r.id.includes('urban-riga') || r.id.includes('tipsport') || r.id.includes('elisa'));
+check('с шенгеном Латвия/Чехия/Финляндия — НА СВОЙ РИСК',
+  riskVisa.length > 0 && riskVisa.every((r) => r.chip === 'НА СВОЙ РИСК'), riskVisa.map((r) => r.chip).join(', '));
+const openVisa = withVisa.filter((r) => r.id.includes('station-strike') || r.id.includes('leon-bet'));
+check('с шенгеном открытые страны — ЕДЕШЬ', openVisa.length > 0 && openVisa.every((r) => r.chip === 'ЕДЕШЬ'),
+  openVisa.map((r) => r.chip).join(', '));
+await page.uncheck('#f-visa');
+const backDefault = await page.$eval('#board tbody[data-id*="stake-pulse"] [data-chip]', (el) => el.textContent.trim());
+check('выключил тумблер — Швеция снова ЗАКРЫТО', backDefault === 'ЗАКРЫТО', backDefault);
+
 // фильтр «только открытые страны»
 await page.check('#f-open');
 const openOnly = await page.$$eval('#board tbody[data-id]', (els) =>

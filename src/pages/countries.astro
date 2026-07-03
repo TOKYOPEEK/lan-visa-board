@@ -38,6 +38,8 @@ const lastVerified = entries.map(([, c]) => c.lastVerified).sort().at(-1);
             {c.biometricOnly && <span class="extra"> · только биометрический паспорт</span>}
             {c.euInsuranceOnly && <span class="extra"> · страховка только ЕС</span>}
             {c.transitBan && <span class="extra"> · транзитный бан</span>}
+            {c.entryWithForeignVisa === 'yes' && <span> · въезд по визе другой страны — легален</span>}
+            {c.entryWithForeignVisa === 'risky' && <span class="extra"> · въезд по чужой визе — серая зона, на свой риск</span>}
           </span>
         </div>
       ))}

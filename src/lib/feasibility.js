@@ -5,32 +5,44 @@
  */
 
 export const STATUS = {
-  CLOSED: {
-    code: 'CLOSED', label: 'ЗАКРЫТО', tone: 'na', rank: 5,
-    hint: 'Страна не выдаёт визы гражданам РФ.',
-  },
-  REG_CLOSED: {
-    code: 'REG_CLOSED', label: 'РЕГИСТРАЦИЯ ЗАКРЫТА', tone: 'na', rank: 4,
-    hint: 'Приём заявок на турнир завершён.',
-  },
-  LATE: {
-    code: 'LATE', label: 'ПОЗДНО', tone: 'dead', rank: 3,
-    hint: 'Визовый цикл не влезает. Не подавай: отказ портит досье.',
-  },
-  TIGHT: {
-    code: 'TIGHT', label: 'ВПРИТЫК', tone: 'warn', rank: 2,
-    hint: 'Только со срочной записью и готовым приглашением.',
-  },
-  OK: {
-    code: 'OK', label: 'РЕАЛЬНО', tone: 'ok', rank: 1,
-    hint: 'Комфортный запас по срокам.',
-  },
   VISA_FREE: {
     code: 'VISA_FREE', label: 'БЕЗ ВИЗЫ', tone: 'ok', rank: 0,
     hint: 'Виза не нужна, но проверь правила въезда и маршрут.',
   },
+  HAS_VISA: {
+    code: 'HAS_VISA', label: 'ЕДЕШЬ', tone: 'ok', rank: 1,
+    hint: 'Виза уже есть — следи только за регистрацией и билетами.',
+  },
+  OK: {
+    code: 'OK', label: 'РЕАЛЬНО', tone: 'ok', rank: 2,
+    hint: 'Комфортный запас по срокам.',
+  },
+  FOREIGN_VISA: {
+    code: 'FOREIGN_VISA', label: 'ВЪЕЗД ОТКРЫТ', tone: 'warn', rank: 3,
+    hint: 'Страна не выдаёт визы гражданам РФ, но пускает по действующей визе другой страны Шенгена.',
+  },
+  TIGHT: {
+    code: 'TIGHT', label: 'ВПРИТЫК', tone: 'warn', rank: 4,
+    hint: 'Только со срочной записью и готовым приглашением.',
+  },
+  FOREIGN_RISK: {
+    code: 'FOREIGN_RISK', label: 'НА СВОЙ РИСК', tone: 'warn', rank: 5,
+    hint: 'Формально въезд закрыт. Команды добираются внутришенгенскими рейсами без паспортного контроля — при выборочной проверке могут развернуть.',
+  },
+  LATE: {
+    code: 'LATE', label: 'ПОЗДНО', tone: 'dead', rank: 6,
+    hint: 'Визовый цикл не влезает. Не подавай: отказ портит досье.',
+  },
+  REG_CLOSED: {
+    code: 'REG_CLOSED', label: 'РЕГИСТРАЦИЯ ЗАКРЫТА', tone: 'na', rank: 7,
+    hint: 'Приём заявок на турнир завершён.',
+  },
+  CLOSED: {
+    code: 'CLOSED', label: 'ЗАКРЫТО', tone: 'na', rank: 8,
+    hint: 'Страна не выдаёт визы гражданам РФ.',
+  },
   UNKNOWN: {
-    code: 'UNKNOWN', label: 'НЕТ ДАННЫХ', tone: 'na', rank: 6,
+    code: 'UNKNOWN', label: 'НЕТ ДАННЫХ', tone: 'na', rank: 9,
     hint: 'Визовый режим этой страны не отслеживается. Проверь сам.',
   },
 };
@@ -46,8 +58,12 @@ function daysBetween(fromISO, toISO) {
  * @param countries data/countries.json
  * @param cfg     data/config.json
  * @param todayISO 'YYYY-MM-DD'
+ * @param opts    { hasVisa } — у игрока уже есть действующая многократная
+ *                шенгенская виза: гейт «успею ли сделать визу» снимается,
+ *                а закрытые страны оцениваются по правилам въезда.
  */
-export function assess(t, countries, cfg, todayISO) {
+export function assess(t, countries, cfg, todayISO, opts = {}) {
+  const hasVisa = Boolean(opts.hasVisa);
   const country = t.country ? countries[t.country] : undefined;
   const visaFree = t.country ? Boolean(cfg.visaFree[t.country]) : false;
   const daysUntil = t.startDate ? daysBetween(todayISO, t.startDate) : null;
@@ -56,8 +72,23 @@ export function assess(t, countries, cfg, todayISO) {
   const regClosed = t.signupClosed === true || (regClosingDay !== null && regClosingDay < todayISO);
 
   let status;
-  if (country && country.status === 'closed') {
-    status = STATUS.CLOSED; // терминально: никакие сроки не помогут
+  if (hasVisa) {
+    // виза уже есть: считаем не сроки подачи, а правила въезда
+    if (regClosed) {
+      status = STATUS.REG_CLOSED;
+    } else if (visaFree) {
+      status = STATUS.VISA_FREE;
+    } else if (country && country.status === 'closed') {
+      status = country.entryWithForeignVisa === 'yes' ? STATUS.FOREIGN_VISA
+        : country.entryWithForeignVisa === 'risky' ? STATUS.FOREIGN_RISK
+        : STATUS.CLOSED;
+    } else if (!country) {
+      status = STATUS.UNKNOWN; // не-шенгенская страна: чужой шенген не поможет
+    } else {
+      status = STATUS.HAS_VISA;
+    }
+  } else if (country && country.status === 'closed') {
+    status = STATUS.CLOSED; // терминально: визу под этот турнир не сделать
   } else if (regClosed) {
     status = STATUS.REG_CLOSED; // перекрывает всё, кроме ЗАКРЫТО
   } else if (visaFree) {
@@ -76,6 +107,7 @@ export function assess(t, countries, cfg, todayISO) {
 
   return {
     status,
+    hasVisa,
     daysUntil,
     regClosed,
     regClosingDay,
@@ -90,11 +122,10 @@ export function assess(t, countries, cfg, todayISO) {
 /** «Покажи математику»: до турнира 63 дня; минимум на визу — 45; … */
 export function explainMath(a, cfg) {
   if (a.daysUntil === null) return null;
-  const parts = [
-    `до турнира ${a.daysUntil} ${plural(a.daysUntil, 'день', 'дня', 'дней')}`,
-    `минимум на визу — ${cfg.visaMinDays}`,
-    `рекомендуемый запас — ${cfg.visaComfortDays}`,
-  ];
+  const days = `до турнира ${a.daysUntil} ${plural(a.daysUntil, 'день', 'дня', 'дней')}`;
+  const parts = a.hasVisa
+    ? [days, 'виза уже есть — сроки подачи не считаются']
+    : [days, `минимум на визу — ${cfg.visaMinDays}`, `рекомендуемый запас — ${cfg.visaComfortDays}`];
   if (a.regClosingDay) {
     parts.push(a.regClosed
       ? `регистрация закрылась ${fmtDayMonth(a.regClosingDay)}`
