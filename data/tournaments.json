@@ -1,9 +1,9 @@
 {
   "source": "https://cslans.com",
   "sourceNote": "данные о турнирах: cslans.com (мейнтейнер: Roope Leppänen, @CS2LANS)",
-  "fetchedAt": "2026-08-06T03:34:09.169Z",
-  "total": 61,
-  "upcoming": 13,
+  "fetchedAt": "2026-08-06T10:48:23.814Z",
+  "total": 62,
+  "upcoming": 14,
   "tournaments": [
     {
       "id": "istanbulan-2026-2026-02-12",
@@ -34,7 +34,7 @@
       "liquipediaUrl": "https://liquipedia.net/counterstrike/IstanbuLAN/2026",
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/istanbulan-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "roman-imperium-cup-v-2026-02-19",
@@ -65,7 +65,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/roman-imperium-cup-v",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "de-airport-masters-2026-02-20",
@@ -96,7 +96,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/de-airport-masters",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "meta-cup-season-4-2026-02-21",
@@ -127,7 +127,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/meta-cup-season-4",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-1-2026-02-22",
@@ -158,7 +158,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-1",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "myskill-pro-league-series-2-2026-02-24",
@@ -189,7 +189,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/myskill-pro-league-series-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "draculan-season-5-2026-02-24",
@@ -220,7 +220,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/draculan-season-5",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "betboom-rush-b-summit-part-deux-2026-02-25",
@@ -251,7 +251,7 @@
       "liquipediaUrl": "https://liquipedia.net/counterstrike/BetBoom/RUSH_B!_Summit/2026/Part_Deux",
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/betboom-rush-b-summit-part-deux",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "fireconter-2026-season-2-2026-02-26",
@@ -282,7 +282,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/fireconter-2026-season-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "circuit-x-pantanal-cuiab-2026-03-04",
@@ -313,7 +313,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/circuit-x-pantanal-cuiab",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "esplay-backforce-masters-2026-2026-03-06",
@@ -344,7 +344,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/esplay-backforce-masters-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-2-2026-03-08",
@@ -375,7 +375,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "roman-imperium-cup-vi-2026-03-12",
@@ -406,7 +406,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/roman-imperium-cup-vi",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "nstlga-washington-cs2-open-2026-03-20",
@@ -437,7 +437,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/nstlga-washington-cs2-open",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "urban-riga-open-3-2026-03-23",
@@ -468,7 +468,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/urban-riga-open-3",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "journey-spring-2026-2026-03-24",
@@ -499,7 +499,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/journey-spring-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "bc-game-masters-championship-2026-03-24",
@@ -530,7 +530,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/bc-game-masters-championship",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "frag-york-2026-03-26",
@@ -561,7 +561,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/frag-york",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "ferjee-in-house-2026-03-26",
@@ -592,7 +592,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/ferjee-in-house",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "roman-imperium-cup-vii-2026-03-28",
@@ -623,7 +623,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/roman-imperium-cup-vii",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "draculan-season-6-2026-03-29",
@@ -654,7 +654,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/draculan-season-6",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-3-2026-03-31",
@@ -689,7 +689,7 @@
         "EYEBALLERS withdrew"
       ],
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-3",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "gangkui-cup-season-2-2026-04-01",
@@ -720,7 +720,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/gangkui-cup-season-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "betboom-circuit-x-mayhem-2026-04-01",
@@ -751,7 +751,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/betboom-circuit-x-mayhem",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "mpkbk-cis-lan-season-4-2026-04-02",
@@ -782,7 +782,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/mpkbk-cis-lan-season-4",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "fireconter-season-3-2026-04-02",
@@ -813,7 +813,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/fireconter-season-3",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "urban-riga-open-4-2026-04-03",
@@ -844,7 +844,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/urban-riga-open-4",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "hlc-belgrade-pro-2026-04-03",
@@ -875,7 +875,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/hlc-belgrade-pro",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "winamax-counter-strike-2-trophy-2026-04-04",
@@ -906,7 +906,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/winamax-counter-strike-2-trophy",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-4-2026-04-10",
@@ -937,7 +937,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-4",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-5-2026-04-18",
@@ -968,7 +968,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-5",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "frag-20-x-lvlup-expo-2026-04-24",
@@ -999,7 +999,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/frag-20-x-lvlup-expo",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "elite-gaming-by-esplay-2026-05-01",
@@ -1030,7 +1030,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/elite-gaming-by-esplay",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-6-2026-05-09",
@@ -1061,7 +1061,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-6",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-7-2026-05-15",
@@ -1092,7 +1092,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-7",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "bc-game-masters-championship-2-2026-05-21",
@@ -1123,7 +1123,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/bc-game-masters-championship-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "parken-challenger-championship-8-2026-05-22",
@@ -1154,7 +1154,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/parken-challenger-championship-8",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "cis-lan-5-2026-05-25",
@@ -1185,7 +1185,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/cis-lan-5",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "betboom-circuit-x-base-2026-05-27",
@@ -1216,7 +1216,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/betboom-circuit-x-base",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "frag-tap-reloaded-2026-05-29",
@@ -1247,7 +1247,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/frag-tap-reloaded",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "1xbet-frag-season-17-2026-05-29",
@@ -1278,7 +1278,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/1xbet-frag-season-17",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "rog-journey-summer-2026-2026-06-12",
@@ -1309,7 +1309,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/rog-journey-summer-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "lg-ultragear-tournament-2026-2026-06-25",
@@ -1347,7 +1347,7 @@
         "Organizer: Myskill."
       ],
       "sourceUrl": "https://cslans.com/tournament/lg-ultragear-tournament-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "urban-riga-open-5-2026-06-28",
@@ -1378,7 +1378,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/urban-riga-open-5",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "urban-riga-open-6-2026-07-27",
@@ -1409,7 +1409,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/urban-riga-open-6",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "winline-cis-lan-6-2026-07-27",
@@ -1449,7 +1449,7 @@
         "The full rulebook will be shared with all participants no later than two weeks before the event. The organizer reserves the right to deny participation to any team or player with an active VAC ban or known integrity violations. Prize pool is funded by registration fees and sponsors."
       ],
       "sourceUrl": "https://cslans.com/tournament/winline-cis-lan-6",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "elisa-esports-breakout-series-1-2026-07-30",
@@ -1480,7 +1480,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/elisa-esports-breakout-series-1",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "stake-pulse-beat-i-2026-07-31",
@@ -1516,7 +1516,7 @@
         "Professional broadcast from Studio 1 featuring instant replays, on-site interviews, and professional commentary."
       ],
       "sourceUrl": "https://cslans.com/tournament/stake-pulse-beat-i",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "tipsport-open-cup-1-2026-08-05",
@@ -1547,7 +1547,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/tipsport-open-cup-1",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "roman-imperium-cup-viii-2026-09-10",
@@ -1580,7 +1580,7 @@
         "Registration Process: Complete the registration form, pay the entry fee, then send proof of payment to romanimperiumseries@gmail.com and wait for confirmation. Teams are accepted in order of payment proof received — no invites."
       ],
       "sourceUrl": "https://cslans.com/tournament/roman-imperium-cup-viii",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "winline-cis-lan-7-2026-09-13",
@@ -1620,7 +1620,7 @@
         "The full rulebook will be shared with all participants no later than two weeks before the event. The organizer reserves the right to deny participation to any team or player with an active VAC ban or known integrity violations. Prize pool is funded by registration fees and sponsors."
       ],
       "sourceUrl": "https://cslans.com/tournament/winline-cis-lan-7",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "hyperx-retake-season-12-2026-09-17",
@@ -1651,7 +1651,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/hyperx-retake-season-12",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "stake-pulse-beat-ii-2026-09-21",
@@ -1689,7 +1689,7 @@
         "Cancellation policy: more than 6 weeks before day 1 → 75% refund, team replaced from waiting list; more than 4 weeks before → 50% refund; less than 4 weeks before → no refund; less than 2 weeks before → team receives walkovers, no refund."
       ],
       "sourceUrl": "https://cslans.com/tournament/stake-pulse-beat-ii",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "tipsport-open-cup-2-2026-09-23",
@@ -1720,7 +1720,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/tipsport-open-cup-2",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "leon-bet-masters-season-1-2026-09-24",
@@ -1754,7 +1754,7 @@
         "The first LAN of the LEON.bet Masters series."
       ],
       "sourceUrl": "https://cslans.com/tournament/leon-bet-masters-season-1",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "winline-cis-lan-8-2026-09-29",
@@ -1794,7 +1794,7 @@
         "The full rulebook will be shared with all participants no later than two weeks before the event. The organizer reserves the right to deny participation to any team or player with an active VAC ban or known integrity violations. Prize pool is funded by registration fees and sponsors."
       ],
       "sourceUrl": "https://cslans.com/tournament/winline-cis-lan-8",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "rog-journey-autumn-2026-2026-10-02",
@@ -1831,7 +1831,40 @@
         "Refund policy: more than 6 weeks before the first tournament day → team replaced from waiting list, 75% refund; more than 4 weeks before → team replaced from waiting list, 50% refund."
       ],
       "sourceUrl": "https://cslans.com/tournament/rog-journey-autumn-2026",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
+    },
+    {
+      "id": "roman-imperium-cup-ix-2026-10-07",
+      "name": "Roman Imperium Cup IX",
+      "startDate": "2026-10-07",
+      "endDate": "2026-10-10",
+      "dateRaw": "October 7-10, 2026",
+      "city": "Vila Nova de Gaia",
+      "location": "SAW ESPORTS ARENA, Vila Nova de Gaia, Portugal",
+      "country": "PT",
+      "teamSlots": 16,
+      "prizePool": {
+        "amount": 12000,
+        "currency": "EUR"
+      },
+      "prizeRaw": "Up to €12,000",
+      "prizeSpread": null,
+      "format": "Format varies based on registered teams (8-16)|* 8 teams: 2 GSL Groups (BO1 opener, BO3 rest) + Single-Elimination BO3 Playoffs|* 9-10 teams: 2 Round-Robin Groups (BO1) + Single-Elimination BO3 Playoffs|* 11-12 teams: 2 Round-Robin Groups (BO1) + Double-Elimination BO3 Playoffs, top 3 advance|* 13-14 teams: 2 Round-Robin Groups (BO1) + Double-Elimination BO3 Playoffs, 2 VRS teams seeded|* 16 teams: 2 Round-Robin Groups (BO1) + Double-Elimination BO3 Playoffs, 4 VRS teams seeded + BO3 play-in",
+      "byoc": null,
+      "registrationFee": "€850 + VAT",
+      "registrationOpening": null,
+      "registrationClosing": null,
+      "signupClosed": null,
+      "tournamentUrl": "https://romanimperiumcup.com/",
+      "signUpUrl": null,
+      "streamUrl": "https://www.twitch.tv/rmncs",
+      "logoUrl": null,
+      "liquipediaUrl": null,
+      "notes": [
+        "Registration Process: Complete the registration form, pay the entry fee, then send proof of payment to romanimperiumseries@gmail.com and wait for confirmation. Teams are accepted in order of payment proof received — no invites."
+      ],
+      "sourceUrl": "https://cslans.com/tournament/roman-imperium-cup-ix",
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "stake-pulse-beat-iii-2026-10-12",
@@ -1862,7 +1895,7 @@
         "Participation: 14 slots on a first-come, first-served basis via the Stake Pulse website; 2 slots via online qualifiers."
       ],
       "sourceUrl": "https://cslans.com/tournament/stake-pulse-beat-iii",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "draculan-season-8-2026-10-19",
@@ -1893,7 +1926,7 @@
       "liquipediaUrl": null,
       "notes": null,
       "sourceUrl": "https://cslans.com/tournament/draculan-season-8",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "winline-cis-lan-9-2026-10-20",
@@ -1933,7 +1966,7 @@
         "The full rulebook will be shared with all participants no later than two weeks before the event. The organizer reserves the right to deny participation to any team or player with an active VAC ban or known integrity violations. Prize pool is funded by registration fees and sponsors."
       ],
       "sourceUrl": "https://cslans.com/tournament/winline-cis-lan-9",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     },
     {
       "id": "nstlga-texas-open-2026-10-30",
@@ -1970,7 +2003,7 @@
         "Every seat is pre-built: AMD Ryzen 7 5800X, NVIDIA RTX 3070 Ti, 32GB RAM, 240Hz Zowie monitors, and Vertagear gaming chairs."
       ],
       "sourceUrl": "https://cslans.com/tournament/nstlga-texas-open",
-      "fetchedAt": "2026-08-06T03:34:09.169Z"
+      "fetchedAt": "2026-08-06T10:48:23.814Z"
     }
   ]
 }
